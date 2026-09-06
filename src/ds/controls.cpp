@@ -79,6 +79,11 @@ namespace ds {
 				FillRect(dc, &rc, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
 				EndPaint(handle, &ps);
 			} break;
+
+			case WM_SIZE:
+			{
+
+			} break;
 		}
 
 		return Control::s_Procedure(handle, msg, wp, lp);
@@ -150,7 +155,15 @@ namespace ds {
 	void ComboBox::AddEntry(const std::wstring& entry)
 	{
 		SendMessageW(m_Handle, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(entry.c_str()));
-		SendMessageW(m_Handle, CB_SETCURSEL, 0, 0); // #TODO(kumor): check if it's cool enough in the final release.
+		SendMessageW(m_Handle, CB_SETCURSEL, 0, 0);
+	}
+
+	void ComboBox::AddEntries(const std::vector<std::wstring>& entries)
+	{
+		for (auto& k : entries)
+			SendMessageW(m_Handle, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(k.c_str()));
+
+		SendMessageW(m_Handle, CB_SETCURSEL, 0, 0);
 	}
 
 	Numeric::Numeric(Pos pos, Size size, const std::wstring& title, Control* parent)

@@ -10,6 +10,7 @@
 
 // STL
 #include <string>
+#include <vector>
 
 // WinAPI
 #include <windows.h>
@@ -76,6 +77,7 @@ namespace ds {
 		ComboBox() = default;
 
 		void AddEntry(const std::wstring& entry);
+		void AddEntries(const std::vector<std::wstring>& entries);
 	};
 
 	class Numeric : public Control
