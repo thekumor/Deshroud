@@ -27,6 +27,8 @@ namespace ds {
 			s_Class.lpszClassName = c_ClassName;
 			s_Class.lpfnWndProc = Window::s_Procedure;
 			s_Class.hCursor = LoadCursorW(instance, IDC_ARROW);
+			s_Class.hIcon = LoadIconW(instance, MAKEINTRESOURCEW(IDI_ICON1));
+			s_Class.hIconSm = LoadIconW(instance, MAKEINTRESOURCEW(IDI_ICON1));
 
 			RegisterClassExW(&s_Class);
 		}

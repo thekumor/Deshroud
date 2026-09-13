@@ -17,6 +17,7 @@
 
 // Deshroud
 #include <ds/vector.h>
+#include <ds/resource.h>
 
 namespace ds {
 

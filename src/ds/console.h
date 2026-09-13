@@ -6,6 +6,11 @@
 *
 * ================================================================ */
 
+// STL
+#include <iostream>
+#include <sstream>
+
+// Deshroud
 #include <ds/controls.h>
 #include <ds/vector.h>
 
@@ -20,7 +25,8 @@ namespace ds {
 		static LRESULT s_Procedure(HWND handle, UINT msg, WPARAM wp, LPARAM lp);
 
 	private:
-
+		std::streambuf* m_OldBuffer;
+		std::ostringstream m_Out;
 	};
 
 }

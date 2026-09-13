@@ -9,13 +9,9 @@ namespace ds {
 		Window window(Pos(0, 0), Size(900, 700), L"Deshroud UI");
 		Console console(Pos(0, 0), Size(640, 480), L"Deshroud Console");
 
-		/*std::streambuf* oldBuffer = std::cout.rdbuf();
-		std::ostringstream out;
-		std::cout.rdbuf(out.rdbuf());
+		std::cout << "Hello there! :)";
 
-		std::cout << "Hello!\n";
-
-		std::system(DS_TEMP_CMD);*/
+		std::system(DS_TEMP_CMD);
 
 		std::wstring tempString(std::wstring(L"Temperature: 35") + L'\u00B0' + std::wstring(L"C"));
 		Label currentTemperature(Pos(50, 50), Size(120, 32), tempString, &window);

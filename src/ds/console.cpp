@@ -5,6 +5,9 @@ namespace ds {
 	Console::Console(Pos pos, Size size, const std::wstring& title, Control* parent)
 		: Control(pos, size, title, parent)
 	{
+		m_OldBuffer = std::cout.rdbuf();
+		std::cout.rdbuf(m_Out.rdbuf());
+
 		HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 		constexpr const wchar_t* c_ClassName = L"DsConsole";
 		static WNDCLASSEXW s_Class = { 0 };
@@ -36,6 +39,7 @@ namespace ds {
 		);
 
 		ShowWindow(m_Handle, SW_SHOW);
+		SetWindowLongPtrW(m_Handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 	}
 
 	LRESULT Console::s_Procedure(HWND handle, UINT msg, WPARAM wp, LPARAM lp)
@@ -44,12 +48,26 @@ namespace ds {
 		{
 			case WM_PAINT:
 			{
+				Console* self = reinterpret_cast<Console*>(GetWindowLongPtr(handle, GWLP_USERDATA));
+
+				if (!self)
+					return 0;
+
 				PAINTSTRUCT ps;
 				RECT rc;
 				GetClientRect(handle, &rc);
 
 				HDC dc = BeginPaint(handle, &ps);
 				FillRect(dc, &rc, reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
+				
+				COLORREF prevColor = SetTextColor(dc, RGB(255, 255, 255));
+				std::int32_t prevBkMode = SetBkMode(dc, TRANSPARENT);
+
+				DrawTextA(dc, self->m_Out.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
+				
+				SetTextColor(dc, prevColor);
+				SetBkMode(dc, prevBkMode);
+
 				EndPaint(handle, &ps);
 
 				return 0;
