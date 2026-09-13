@@ -1,12 +1,25 @@
 #include "console.h"
 
+#define DS_OUT_BUFF 0
+#define DS_ERR_BUFF 1
+#define DS_LOG_BUFF 2
+
 namespace ds {
 
 	Console::Console(Pos pos, Size size, const std::wstring& title, Control* parent)
 		: Control(pos, size, title, parent)
-	{
-		m_OldBuffer = std::cout.rdbuf();
-		std::cout.rdbuf(m_Out.rdbuf());
+	{	
+		// std::cout
+		m_Buffers[DS_OUT_BUFF] = BufferInfo(std::cout.rdbuf(), BufferType::Out);
+		std::cout.rdbuf(m_Buffers[DS_OUT_BUFF].Stream.rdbuf());
+
+		// std::cerr
+		m_Buffers[DS_ERR_BUFF] = BufferInfo(std::cerr.rdbuf(), BufferType::Error);
+		std::cerr.rdbuf(m_Buffers[DS_ERR_BUFF].Stream.rdbuf());
+
+		// std::clog
+		m_Buffers[DS_LOG_BUFF] = BufferInfo(std::clog.rdbuf(), BufferType::Log);
+		std::clog.rdbuf(m_Buffers[DS_LOG_BUFF].Stream.rdbuf());
 
 		HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 		constexpr const wchar_t* c_ClassName = L"DsConsole";
@@ -60,10 +73,29 @@ namespace ds {
 				HDC dc = BeginPaint(handle, &ps);
 				FillRect(dc, &rc, reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
 				
-				COLORREF prevColor = SetTextColor(dc, RGB(255, 255, 255));
+				
 				std::int32_t prevBkMode = SetBkMode(dc, TRANSPARENT);
 
-				DrawTextA(dc, self->m_Out.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
+				BufferInfo* outBuffer = &self->m_Buffers[DS_OUT_BUFF];
+				BufferInfo* errorBuffer = &self->m_Buffers[DS_ERR_BUFF];
+				BufferInfo* logBuffer = &self->m_Buffers[DS_LOG_BUFF];
+
+				COLORREF prevColor = GetTextColor(dc);
+				if (outBuffer)
+				{
+					SetTextColor(dc, RGB(255, 255, 255));
+					DrawTextA(dc, outBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
+				}
+				if (errorBuffer)
+				{
+					SetTextColor(dc, RGB(255, 0, 0));
+					DrawTextA(dc, errorBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
+				}
+				if (logBuffer)
+				{
+					SetTextColor(dc, RGB(240, 150, 90));
+					DrawTextA(dc, logBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
+				}
 				
 				SetTextColor(dc, prevColor);
 				SetBkMode(dc, prevBkMode);
@@ -87,5 +119,18 @@ namespace ds {
 
 		return Window::s_Procedure(handle, msg, wp, lp);
 	}
+
+	BufferInfo* Console::GetBuffer(BufferType type)
+	{
+		for (auto& k : m_Buffers)
+			if (k.Type == type)
+				return &k;
+
+		return nullptr;
+	}
+
+	BufferInfo::BufferInfo(std::streambuf* old, BufferType type)
+		: OldBuffer(old), Type(type)
+	{}
 
 }
