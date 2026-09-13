@@ -35,6 +35,7 @@ namespace ds {
 		friend class Label;
 		friend class ComboBox;
 		friend class Numeric;
+		friend class Console;
 
 	protected:
 		HWND m_Handle;

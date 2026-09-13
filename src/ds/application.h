@@ -10,12 +10,15 @@
 
 // STL
 #include <cstdlib>
+#include <iostream>
+#include <sstream>
 
 // WinAPI
 #include <windows.h>
 
 // Deshroud
 #include <ds/controls.h>
+#include <ds/console.h>
 
 namespace ds {
 

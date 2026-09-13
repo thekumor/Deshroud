@@ -1,4 +1,5 @@
 #include "controls.h"
+#include "console.h"
 
 namespace ds {
 
