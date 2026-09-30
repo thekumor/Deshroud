@@ -94,8 +94,8 @@ namespace ds {
 
 	Pos GetScreenCenter()
 	{
-		int width = GetSystemMetrics(SM_CXSCREEN);
-		int height = GetSystemMetrics(SM_CYSCREEN);
+		std::int32_t width = GetSystemMetrics(SM_CXSCREEN);
+		std::int32_t height = GetSystemMetrics(SM_CYSCREEN);
 
 		return { width, height };
 	}

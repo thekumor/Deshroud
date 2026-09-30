@@ -21,6 +21,9 @@ namespace ds {
 		m_Buffers[DS_LOG_BUFF] = BufferInfo(std::clog.rdbuf(), BufferType::Log);
 		std::clog.rdbuf(m_Buffers[DS_LOG_BUFF].Stream.rdbuf());
 
+		// custom
+		m_Messages = "";
+
 		HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 		constexpr const wchar_t* c_ClassName = L"DsConsole";
 		static WNDCLASSEXW s_Class = { 0 };
@@ -73,7 +76,6 @@ namespace ds {
 				HDC dc = BeginPaint(handle, &ps);
 				FillRect(dc, &rc, reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
 				
-				
 				std::int32_t prevBkMode = SetBkMode(dc, TRANSPARENT);
 
 				BufferInfo* outBuffer = &self->m_Buffers[DS_OUT_BUFF];
@@ -81,6 +83,7 @@ namespace ds {
 				BufferInfo* logBuffer = &self->m_Buffers[DS_LOG_BUFF];
 
 				COLORREF prevColor = GetTextColor(dc);
+#if 0
 				if (outBuffer)
 				{
 					SetTextColor(dc, RGB(255, 255, 255));
@@ -96,6 +99,9 @@ namespace ds {
 					SetTextColor(dc, RGB(240, 150, 90));
 					DrawTextA(dc, logBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
 				}
+#endif
+				SetTextColor(dc, RGB(255, 255, 255));
+				DrawTextA(dc, self->m_Messages.c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
 				
 				SetTextColor(dc, prevColor);
 				SetBkMode(dc, prevBkMode);
@@ -129,8 +135,30 @@ namespace ds {
 		return nullptr;
 	}
 
+	void Console::AddMessage(const std::string& msg)
+	{
+		Timestamp ts;
+		m_Messages += ts.ToString().substr(0, ts.ToString().size() - 1) + ": " + msg + "\n";
+
+		// Force redraw
+		InvalidateRect(m_Handle, nullptr, TRUE);
+	}
+
 	BufferInfo::BufferInfo(std::streambuf* old, BufferType type)
 		: OldBuffer(old), Type(type)
 	{}
+
+	Timestamp::Timestamp()
+	{
+		m_Epoch = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	}
+
+	std::string Timestamp::ToString() const
+	{
+		char buffer[256];
+		ctime_s(buffer, 256, &m_Epoch);
+
+		return std::string(buffer);
+	}
 
 }

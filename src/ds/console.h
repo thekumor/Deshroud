@@ -11,6 +11,8 @@
 #include <sstream>
 #include <cstdint>
 #include <array>
+#include <vector>
+#include <chrono>
 
 // Deshroud
 #include <ds/controls.h>
@@ -31,9 +33,26 @@ namespace ds {
 		BufferInfo(std::streambuf* old, BufferType type);
 		BufferInfo() = default;
 
-		std::streambuf* OldBuffer;
-		std::ostringstream Stream;
-		BufferType Type;
+		std::streambuf* OldBuffer = nullptr;
+		std::ostringstream Stream = std::ostringstream();
+		BufferType Type = BufferType::Invalid;
+	};
+
+	struct Timestamp
+	{
+		Timestamp();
+
+		std::time_t m_Epoch;
+
+		[[nodiscard]] std::string ToString() const;
+	};
+
+	struct Message
+	{
+		Message() = default;
+
+		std::wstring m_Content;
+		Timestamp m_Time;
 	};
 
 	class Console : public Control
@@ -45,9 +64,12 @@ namespace ds {
 		static LRESULT s_Procedure(HWND handle, UINT msg, WPARAM wp, LPARAM lp);
 
 		BufferInfo* GetBuffer(BufferType type);
+		void AddMessage(const std::string& msg);
 
 	private:
 		std::array<BufferInfo, 3> m_Buffers;
+		std::vector<std::string> m_OwnBuffer;
+		std::string m_Messages;
 	};
 
 }

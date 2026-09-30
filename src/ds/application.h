@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <cstdio>
+#include <cstdlib>
 
 // WinAPI
 #include <windows.h>
