@@ -10,11 +10,14 @@ namespace ds {
 		Console console(Pos(0, 0), Size(640, 480), L"Deshroud Console");
 
 		console.AddMessage("Hello there!");
+		Label currentTemperature(Pos(50, 50), Size(120, 32), std::wstring(L"Temperature: 35") + L'\u00B0' + std::wstring(L"C"), &window);
 
-		//std::system(DS_TEMP_CMD " > test.txt");
-
-		std::wstring tempString(std::wstring(L"Temperature: 35") + L'\u00B0' + std::wstring(L"C"));
-		Label currentTemperature(Pos(50, 50), Size(120, 32), tempString, &window);
+		FILE* pipe = _popen(DS_TEMP_CMD, "rt");
+		char buffer[17];
+		char buffer1[5];
+		fgets(buffer, 17, pipe);
+		fgets(buffer1, 5, pipe);
+		_pclose(pipe);
 
 		MSG msg = {};
 
