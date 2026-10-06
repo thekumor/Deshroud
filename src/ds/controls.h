@@ -18,6 +18,7 @@
 // Deshroud
 #include <ds/vector.h>
 #include <ds/resource.h>
+#include <ds/events.h>
 
 namespace ds {
 
@@ -37,6 +38,7 @@ namespace ds {
 		friend class ComboBox;
 		friend class Numeric;
 		friend class Console;
+		friend class Timer;
 
 	protected:
 		HWND m_Handle;
@@ -87,6 +89,23 @@ namespace ds {
 	public:
 		Numeric(Pos pos, Size size, const std::wstring& title, Control* parent = nullptr);
 		Numeric() = default;
+	};
+
+	class Timer
+	{
+	public:
+		Timer(std::int32_t delay, EventCallback callback);
+		Timer(std::int32_t delay, EventCallback callback, Control* owner);
+		Timer() = default;
+
+		static void s_Callback(HWND handle, UINT msg, UINT_PTR Id, DWORD miliseconds);
+
+		void SetCallback(EventCallback callback);
+
+	private:
+		EventCallback m_Callback;
+		std::int32_t m_Delay, m_Id;
+		Control* m_Owner = nullptr;
 	};
 
 }

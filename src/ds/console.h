@@ -47,12 +47,22 @@ namespace ds {
 		[[nodiscard]] std::string ToString() const;
 	};
 
+	enum class MessageType : std::int32_t
+	{
+		Invalid = 0,
+		Info,
+		Warning,
+		Error
+	};
+
 	struct Message
 	{
+		Message(const std::string& string, MessageType type);
 		Message() = default;
 
-		std::wstring m_Content;
-		Timestamp m_Time;
+		std::string Content;
+		Timestamp Time;
+		MessageType Type;
 	};
 
 	class Console : public Control
@@ -64,12 +74,11 @@ namespace ds {
 		static LRESULT s_Procedure(HWND handle, UINT msg, WPARAM wp, LPARAM lp);
 
 		BufferInfo* GetBuffer(BufferType type);
-		void AddMessage(const std::string& msg);
+		void AddMessage(const Message& msg);
 
 	private:
 		std::array<BufferInfo, 3> m_Buffers;
-		std::vector<std::string> m_OwnBuffer;
-		std::string m_Messages;
+		std::vector<Message> m_Messages;
 	};
 
 }

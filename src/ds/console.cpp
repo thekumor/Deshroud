@@ -21,9 +21,6 @@ namespace ds {
 		m_Buffers[DS_LOG_BUFF] = BufferInfo(std::clog.rdbuf(), BufferType::Log);
 		std::clog.rdbuf(m_Buffers[DS_LOG_BUFF].Stream.rdbuf());
 
-		// custom
-		m_Messages = "";
-
 		HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 		constexpr const wchar_t* c_ClassName = L"DsConsole";
 		static WNDCLASSEXW s_Class = { 0 };
@@ -100,9 +97,45 @@ namespace ds {
 					DrawTextA(dc, logBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
 				}
 #endif
-				SetTextColor(dc, RGB(255, 255, 255));
-				DrawTextA(dc, self->m_Messages.c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
-				
+				std::int32_t yOffset = 0;
+				for (auto& k : self->m_Messages)
+				{
+					static COLORREF s_BadColor = RGB(255, 0, 0);
+					static COLORREF s_WarningColor = RGB(240, 240, 0);
+					static COLORREF s_NormalColor = RGB(255, 255, 255);
+
+					COLORREF color = s_NormalColor;
+
+					switch (k.Type)
+					{
+						case MessageType::Error:
+						{
+							color = s_BadColor;
+						} break;
+
+						case MessageType::Warning:
+						{
+							color = s_WarningColor;
+						} break;
+
+						case MessageType::Info:
+						{
+							color = s_NormalColor;
+						} break;
+					}
+
+					SetTextColor(dc, color);
+					const std::string& str = k.Time.ToString().substr(0, k.Time.ToString().size() - 1) + ": " + k.Content + "\n";
+					DrawTextA(dc, str.c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
+
+					// Technically, we could use DrawTextA to get text height/position but
+					// it works as well.
+					yOffset += 20;
+
+					rc.top += yOffset - 20 * (yOffset - 20) / 20;
+					rc.bottom += yOffset - 20 * (yOffset - 20) / 20;
+				}
+
 				SetTextColor(dc, prevColor);
 				SetBkMode(dc, prevBkMode);
 
@@ -135,11 +168,9 @@ namespace ds {
 		return nullptr;
 	}
 
-	void Console::AddMessage(const std::string& msg)
+	void Console::AddMessage(const Message& msg)
 	{
-		Timestamp ts;
-		m_Messages += ts.ToString().substr(0, ts.ToString().size() - 1) + ": " + msg + "\n";
-
+		m_Messages.push_back(msg);
 		// Force redraw
 		InvalidateRect(m_Handle, nullptr, TRUE);
 	}
@@ -159,6 +190,11 @@ namespace ds {
 		ctime_s(buffer, 256, &m_Epoch);
 
 		return std::string(buffer);
+	}
+
+	Message::Message(const std::string& string, MessageType type)
+		: Content(string), Type(type)
+	{
 	}
 
 }

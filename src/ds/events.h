@@ -20,7 +20,7 @@
 #define TIC_EV_CAST_TYPE(var, type) *(type*)var
 #define TIC_EV_CAST(var, data) *(decltype(var)*)data
 
-namespace tic {
+namespace ds {
 
 	typedef std::int32_t event_qualifier;
 

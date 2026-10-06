@@ -1,5 +1,4 @@
 #include "controls.h"
-#include "console.h"
 
 namespace ds {
 
@@ -85,7 +84,11 @@ namespace ds {
 
 			case WM_SIZE:
 			{
+				
+			} break;
 
+			case WM_TIMER:
+			{
 			} break;
 		}
 
@@ -185,6 +188,27 @@ namespace ds {
 			static_cast<HINSTANCE>(GetModuleHandleW(nullptr)),
 			0
 		);
+	}
+
+	static std::int32_t s_TimerId = 0;
+	Timer::Timer(std::int32_t delay, EventCallback callback)
+		: m_Delay(delay), m_Id(++s_TimerId), m_Callback(callback)
+	{
+	}
+
+	Timer::Timer(std::int32_t delay, EventCallback callback, Control* owner)
+		: m_Delay(delay), m_Id(++s_TimerId), m_Callback(callback), m_Owner(owner)
+	{
+		SetTimer(owner->m_Handle, m_Id, delay, /*s_Callback*/ nullptr);
+	}
+
+	void Timer::s_Callback(HWND handle, UINT msg, UINT_PTR Id, DWORD miliseconds)
+	{
+
+	}
+
+	void Timer::SetCallback(EventCallback callback)
+	{
 	}
 
 }

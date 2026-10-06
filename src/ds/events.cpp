@@ -1,6 +1,6 @@
 #include "events.h"
 
-namespace tic {
+namespace ds {
 
 	Event::Event(EventType type, EventData data)
 		: m_Type(type), m_Data(data)
