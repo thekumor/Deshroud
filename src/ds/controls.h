@@ -91,21 +91,4 @@ namespace ds {
 		Numeric() = default;
 	};
 
-	class Timer
-	{
-	public:
-		Timer(std::int32_t delay, EventCallback callback);
-		Timer(std::int32_t delay, EventCallback callback, Control* owner);
-		Timer() = default;
-
-		static void s_Callback(HWND handle, UINT msg, UINT_PTR Id, DWORD miliseconds);
-
-		void SetCallback(EventCallback callback);
-
-	private:
-		EventCallback m_Callback;
-		std::int32_t m_Delay, m_Id;
-		Control* m_Owner = nullptr;
-	};
-
 }

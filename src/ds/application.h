@@ -20,6 +20,7 @@
 // Deshroud
 #include <ds/controls.h>
 #include <ds/console.h>
+#include <ds/timers.h>
 
 namespace ds {
 

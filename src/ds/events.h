@@ -17,8 +17,8 @@
 // WinAPI
 #include <windows.h>
 
-#define TIC_EV_CAST_TYPE(var, type) *(type*)var
-#define TIC_EV_CAST(var, data) *(decltype(var)*)data
+#define DS_EV_CAST_TYPE(var, type) *(type*)var
+#define DS_EV_CAST(var, data) *(decltype(var)*)data
 
 namespace ds {
 
