@@ -21,9 +21,10 @@
 #include <ds/controls.h>
 #include <ds/console.h>
 #include <ds/timers.h>
+#include <ds/font.h>
 
-namespace ds {
-
+namespace ds
+{
 	class Application
 	{
 	public:
@@ -32,7 +33,6 @@ namespace ds {
 		int Run();
 
 	private:
-		
-	};
 
+	};
 }

@@ -17,8 +17,8 @@
 // Deshroud
 #include <ds/events.h>
 
-namespace ds {
-
+namespace ds
+{
 	class Timer
 	{
 	public:
@@ -33,5 +33,4 @@ namespace ds {
 		EventCallback m_Callback;
 		std::int32_t m_Delay, m_Id;
 	};
-
 }

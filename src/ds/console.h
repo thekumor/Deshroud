@@ -18,8 +18,8 @@
 #include <ds/controls.h>
 #include <ds/vector.h>
 
-namespace ds {
-
+namespace ds
+{
 	enum class BufferType : std::int16_t
 	{
 		Invalid = 0,
@@ -80,5 +80,4 @@ namespace ds {
 		std::array<BufferInfo, 3> m_Buffers;
 		std::vector<Message> m_Messages;
 	};
-
 }

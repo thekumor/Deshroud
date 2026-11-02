@@ -1,15 +1,20 @@
 #include "controls.h"
 
-namespace ds {
-
+namespace ds
+{
 	Control::Control(Pos pos, Size size, const std::wstring& title, Control* parent)
 		: m_Pos(pos), m_Size(size), m_Title(title), m_Parent(parent)
-	{
-	}
+	{}
 
 	LRESULT Control::s_Procedure(HWND handle, UINT msg, WPARAM wp, LPARAM lp)
 	{
 		return DefWindowProcW(handle, msg, wp, lp);
+	}
+
+	void Control::SetFont(Font& font)
+	{
+		m_Font = &font;
+		SendMessageW(m_Handle, WM_SETFONT, reinterpret_cast<WPARAM>(font.m_Handle), TRUE);
 	}
 
 	Window::Window(Pos pos, Size size, const std::wstring& title, Control* parent)
@@ -84,7 +89,7 @@ namespace ds {
 
 			case WM_SIZE:
 			{
-				
+
 			} break;
 		}
 
@@ -185,5 +190,4 @@ namespace ds {
 			0
 		);
 	}
-
 }

@@ -20,8 +20,8 @@
 #define DS_EV_CAST_TYPE(var, type) *(type*)var
 #define DS_EV_CAST(var, data) *(decltype(var)*)data
 
-namespace ds {
-
+namespace ds
+{
 	typedef std::int32_t event_qualifier;
 
 	enum class EventType : std::uint32_t
@@ -43,8 +43,8 @@ namespace ds {
 		Event(EventType type, EventData data = nullptr);
 		Event() = default;
 
-		inline EventType GetType() const { return m_Type; }
-		inline EventData GetData() const { return m_Data; }
+		[[nodiscard]] inline EventType GetType() const noexcept { return m_Type; }
+		[[nodiscard]] inline EventData GetData() const noexcept { return m_Data; }
 
 	private:
 		EventType m_Type;
@@ -94,8 +94,8 @@ namespace ds {
 	public:
 		EventActive() = default;
 
-		inline EventDispatcher& GetDispatcher() { return m_Disp; }
-		inline EventListener& GetListener() { return m_Listener; }
+		[[nodiscard]] inline EventDispatcher& GetDispatcher() noexcept { return m_Disp; }
+		[[nodiscard]] inline EventListener& GetListener() noexcept { return m_Listener; }
 		void AddCallback(EventType type, EventCallback callback);
 
 	private:
@@ -104,5 +104,4 @@ namespace ds {
 	};
 
 	extern EventDispatcher g_Dispatcher;
-
 }

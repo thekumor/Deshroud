@@ -12,10 +12,10 @@
 #include <cstdint>
 #include <string>
 
-namespace ds {
+#define DS_BIT(x) 1 << x
 
-	// #TODO(kumor): Give this a move constructor
-
+namespace ds
+{
 	template<typename T>
 	struct Vec2
 	{
@@ -93,5 +93,4 @@ namespace ds {
 
 	using Size = Vec2i;
 	using Pos = Vec2i;
-
 };

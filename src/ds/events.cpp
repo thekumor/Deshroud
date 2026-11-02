@@ -1,7 +1,7 @@
 #include "events.h"
 
-namespace ds {
-
+namespace ds
+{
 	Event::Event(EventType type, EventData data)
 		: m_Type(type), m_Data(data)
 	{}
@@ -48,7 +48,7 @@ namespace ds {
 
 	void EventDispatcher::UnpinInvalidListeners()
 	{
-		for (std::int32_t i = 0 ; i < m_Listeners.size(); i++)
+		for (std::int32_t i = 0; i < m_Listeners.size(); i++)
 		{
 			if (!m_Listeners[i]->IsValid())
 			{
@@ -96,5 +96,4 @@ namespace ds {
 	{
 		GetListener().AddCallback(type, callback);
 	}
-
 }

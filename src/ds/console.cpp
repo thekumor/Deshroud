@@ -4,11 +4,11 @@
 #define DS_ERR_BUFF 1
 #define DS_LOG_BUFF 2
 
-namespace ds {
-
+namespace ds
+{
 	Console::Console(Pos pos, Size size, const std::wstring& title, Control* parent)
 		: Control(pos, size, title, parent)
-	{	
+	{
 		// std::cout
 		m_Buffers[DS_OUT_BUFF] = BufferInfo(std::cout.rdbuf(), BufferType::Out);
 		std::cout.rdbuf(m_Buffers[DS_OUT_BUFF].Stream.rdbuf());
@@ -72,7 +72,7 @@ namespace ds {
 
 				HDC dc = BeginPaint(handle, &ps);
 				FillRect(dc, &rc, reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
-				
+
 				std::int32_t prevBkMode = SetBkMode(dc, TRANSPARENT);
 
 				BufferInfo* outBuffer = &self->m_Buffers[DS_OUT_BUFF];
@@ -80,23 +80,7 @@ namespace ds {
 				BufferInfo* logBuffer = &self->m_Buffers[DS_LOG_BUFF];
 
 				COLORREF prevColor = GetTextColor(dc);
-#if 0
-				if (outBuffer)
-				{
-					SetTextColor(dc, RGB(255, 255, 255));
-					DrawTextA(dc, outBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
-				}
-				if (errorBuffer)
-				{
-					SetTextColor(dc, RGB(255, 0, 0));
-					DrawTextA(dc, errorBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
-				}
-				if (logBuffer)
-				{
-					SetTextColor(dc, RGB(240, 150, 90));
-					DrawTextA(dc, logBuffer->Stream.str().c_str(), -1, &rc, DT_LEFT | DT_NOCLIP | DT_TOP);
-				}
-#endif
+
 				std::int32_t yOffset = 0;
 				for (auto& k : self->m_Messages)
 				{
@@ -194,7 +178,5 @@ namespace ds {
 
 	Message::Message(const std::string& string, MessageType type)
 		: Content(string), Type(type)
-	{
-	}
-
+	{}
 }

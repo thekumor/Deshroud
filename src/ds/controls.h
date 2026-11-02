@@ -19,9 +19,10 @@
 #include <ds/vector.h>
 #include <ds/resource.h>
 #include <ds/events.h>
+#include <ds/font.h>
 
-namespace ds {
-
+namespace ds
+{
 	Pos GetScreenCenter();
 
 	class Control
@@ -31,6 +32,8 @@ namespace ds {
 		Control() = default;
 
 		static LRESULT s_Procedure(HWND handle, UINT msg, WPARAM wp, LPARAM lp);
+
+		void SetFont(Font& font);
 
 		friend class Window;
 		friend class Button;
@@ -42,6 +45,7 @@ namespace ds {
 
 	protected:
 		HWND m_Handle;
+		Font* m_Font;
 		Pos m_Pos;
 		Size m_Size;
 		std::wstring m_Title;
@@ -90,5 +94,4 @@ namespace ds {
 		Numeric(Pos pos, Size size, const std::wstring& title, Control* parent = nullptr);
 		Numeric() = default;
 	};
-
 }
